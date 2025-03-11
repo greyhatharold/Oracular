@@ -361,6 +361,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, pageTitle }) => {
       sx={{
         width: { sm: DRAWER_WIDTH },
         flexShrink: { sm: 0 },
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: theme.zIndex.drawer,
       }}
     >
       {/* Mobile drawer */}
@@ -374,6 +379,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, pageTitle }) => {
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
             bgcolor: 'background.paper',
+            position: 'fixed',
+            left: 0,
           },
         }}
       >
@@ -391,6 +398,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, pageTitle }) => {
             borderRight: 'none',
             boxShadow: 'none',
             backdropFilter: 'blur(20px)',
+            position: 'fixed',
+            left: 0,
             '&::before': {
               content: '""',
               position: 'absolute',

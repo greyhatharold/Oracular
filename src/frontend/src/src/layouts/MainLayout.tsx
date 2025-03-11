@@ -177,8 +177,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    ml: { xs: 0, sm: `${DRAWER_WIDTH + 48}px` },
-    transition: 'margin-left 0.3s ease-in-out',
+    width: {
+      xs: '100%',
+      sm: `calc(100% - ${DRAWER_WIDTH}px)`
+    },
+    marginLeft: {
+      xs: 0,
+      sm: `${DRAWER_WIDTH}px`
+    },
+    transition: 'all 0.3s ease-in-out',
     background: 'transparent',
   }), []);
 
@@ -186,7 +193,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     background: 'transparent',
     backdropFilter: 'blur(10px)',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    width: { sm: `calc(100% - ${DRAWER_WIDTH + 48}px)` },
+    width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
     ml: { sm: `${DRAWER_WIDTH}px` },
     boxShadow: 'none',
     '& .MuiToolbar-root': {
@@ -221,24 +228,26 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   }), []);
 
   const backgroundStyles = useMemo(() => ({
-    display: 'flex',
-    minHeight: '100vh',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     background: 'linear-gradient(165deg, rgba(13, 17, 31, 0.99) 0%, rgba(50, 55, 89, 0.99) 100%)',
-    position: 'relative',
+    zIndex: 0,
     '&::before': {
       content: '""',
-      position: 'fixed',
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
       background: 'radial-gradient(circle at 50% 50%, rgba(103, 116, 255, 0.05) 0%, rgba(30, 39, 97, 0.02) 100%)',
       pointerEvents: 'none',
-      zIndex: 0
     },
     '&::after': {
       content: '""',
-      position: 'fixed',
+      position: 'absolute',
       top: '10%',
       left: '5%',
       width: '90%',
@@ -247,12 +256,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       filter: 'blur(60px)',
       opacity: 0.4,
       pointerEvents: 'none',
-      zIndex: 0
     }
   }), []);
 
   return (
-    <Box sx={backgroundStyles}>
+    <Box 
+      sx={{ 
+        display: 'flex',
+        minHeight: '100vh',
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: 'transparent',
+      }}
+    >
+      <Box sx={backgroundStyles} />
       <Sidebar 
         open={isSidebarOpen && !isMobile} 
         onClose={toggleSidebar} 
@@ -262,12 +279,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       <Box 
         component="main" 
         sx={{
-          ...mainContentStyles,
-          backgroundColor: 'transparent',
+          flexGrow: 1,
+          minHeight: '100vh',
           position: 'relative',
           zIndex: 1,
-          width: { xs: '100%', sm: `calc(100% - ${DRAWER_WIDTH + 48}px)` },
-          pt: isWidgetboard ? 0 : { xs: '64px', sm: '64px' },
+          marginLeft: { xs: '1px', sm: `${DRAWER_WIDTH + 1}px` },
+          width: { xs: 'calc(100% - 1px)', sm: `calc(100% - ${DRAWER_WIDTH + 1}px)` },
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
         }}
       >
         {!isWidgetboard && (
@@ -275,12 +296,19 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             position="fixed" 
             elevation={0} 
             sx={{
-              ...appBarStyles,
+              width: { xs: 'calc(100% - 1px)', sm: `calc(100% - ${DRAWER_WIDTH + 1}px)` },
+              marginLeft: { xs: '1px', sm: `${DRAWER_WIDTH + 1}px` },
+              background: 'transparent',
+              backdropFilter: 'blur(10px)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+              }),
               '& .MuiToolbar-root': {
                 backdropFilter: 'blur(20px)',
                 background: 'rgba(13, 17, 31, 0.8)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                transition: 'all 0.3s ease-in-out'
               }
             }}
           >
@@ -359,22 +387,37 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           </AppBar>
         )}
 
-        <Box component="div" sx={{
-          ...contentStyles,
-          mt: isWidgetboard ? 0 : '64px',
-          height: isWidgetboard ? '100vh' : 'calc(100vh - 64px)',
-        }}>
+        <Box 
+          sx={{
+            flexGrow: 1,
+            pt: isWidgetboard ? 0 : '64px',
+            height: isWidgetboard ? '100vh' : 'calc(100vh - 64px)',
+            overflow: 'auto',
+            '&::-webkit-scrollbar': {
+              width: '8px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'rgba(103, 116, 255, 0.05)',
+              borderRadius: '4px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'rgba(103, 116, 255, 0.1)',
+              borderRadius: '4px',
+              '&:hover': {
+                background: 'rgba(103, 116, 255, 0.2)',
+              }
+            },
+          }}
+        >
           <Container 
             maxWidth={false}
             disableGutters
             sx={{
-              maxWidth: '100%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
               gap: { xs: 2, sm: 3 },
-              pl: { xs: 2, sm: 4, md: 6 },
-              pr: { xs: 2, sm: 3, md: 4 },
+              px: { xs: 2, sm: 3 },
             }}
           >
             {children}
