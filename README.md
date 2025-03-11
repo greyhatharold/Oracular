@@ -1,27 +1,29 @@
-# Oracular: Secure and Reliable Blockchain Oracle Service
+# Oracular: AI-Powered Blockchain Oracle Generator
 
-Oracular is a robust and secure oracle service that facilitates the reliable flow of off-chain data to on-chain smart contracts. It implements a modular architecture with comprehensive security measures, data validation, and monitoring capabilities.
+Oracular is an intelligent system that helps design and generate secure and reliable blockchain oracles through a conversational interface. It implements a sophisticated architecture that guides users through the process of specifying, validating, and generating oracle implementations.
 
 ## Features
 
-- **Modular Architecture**: Clear separation of concerns between data acquisition, validation, aggregation, and on-chain submission
-- **Data Validation**: Comprehensive validation rules for different data types (numeric, categorical, binary)
-- **Reputation-Weighted Aggregation**: Smart aggregation of data from multiple sources with outlier detection
-- **Cryptographic Security**: Strong cryptographic signing ensuring data integrity and provenance
-- **Circuit Breaker Pattern**: Protection against data corruption and service degradation
-- **Comprehensive Monitoring**: Prometheus metrics and health checks for operational visibility
-- **Configurable Scheduling**: Flexible update intervals with automatic retry mechanisms
+- **AI-Powered Design**: Conversational interface that helps users design and specify oracle requirements
+- **Intelligent Specification Builder**: Guides users through defining data sources, validation rules, and update behaviors
+- **Automated Validation**: Comprehensive validation of oracle specifications with confidence scoring
+- **Multi-Format Output**: Generate specifications in various formats (JSON, YAML, Smart Contracts, Visual Diagrams)
+- **Interactive Refinement**: Clarification system that helps resolve ambiguities and improve specifications
+- **Modular Architecture**: Clear separation between specification building, validation, and output generation
+- **Comprehensive Documentation**: Auto-generated documentation for oracle implementations
+- **Security-First Design**: Built-in security best practices and validation rules
 
 ## Architecture
 
-The service is built with the following key components:
+The system is built with the following key components:
 
-- **DataSource**: Abstract base class for implementing different data sources
-- **DataValidator**: Validates incoming data against predefined rules
-- **DataAggregator**: Combines data from multiple sources with outlier detection
-- **CircuitBreaker**: Implements safety patterns for service reliability
-- **PerformanceMonitor**: Tracks service metrics and health indicators
-- **OracleService**: Main orchestrator managing the entire data pipeline
+- **OracleDesigner**: Main orchestrator that manages the oracle specification process
+- **SpecificationBuilder**: Builds formal oracle specifications from natural language input
+- **ClarificationGenerator**: Generates targeted questions to resolve specification ambiguities
+- **ExplanationGenerator**: Provides clear explanations for technical decisions
+- **SpecificationConverter**: Transforms specifications into various output formats
+- **ValidationService**: Validates specifications against predefined rules
+- **ExternalAIService**: Integrates with external AI models for enhanced capabilities
 
 ## Installation
 
@@ -44,66 +46,46 @@ pip install -r requirements.txt
 
 ## Configuration
 
-The service is configured through `src/backend/config/oracle_config.py`. Key configuration areas include:
+The system is configured through various configuration files in the `src/backend/config/` directory. Key configuration areas include:
 
-- Validation rules for different data types
-- Oracle service parameters (update intervals, thresholds)
-- Monitoring settings
-- Logging configuration
+- AI model configurations
+- Validation rules and constraints
+- Output format settings
+- External service integrations
 
 ## Usage
 
 ### Basic Usage
 
 ```python
-from backend.services.oracle_service import OracleService
-from backend.config.oracle_config import VALIDATION_RULES
+from backend.ai.oracle_designer import create_oracle_designer
 
-# Initialize the oracle service
-oracle = OracleService(
-    data_sources=[your_data_sources],
-    validator=DataValidator(VALIDATION_RULES),
-    update_interval=60
+# Initialize the oracle designer
+designer = create_oracle_designer()
+
+# Process user input and get oracle specification
+response = await designer.process_input(
+    "I need an oracle that provides real-time cryptocurrency price data"
 )
 
-# Start the service
-await oracle.start()
+# Access the generated specification
+specification = response['specification']
+formal_spec = response['formal_specification']
 ```
 
-### Implementing a Custom Data Source
+### Implementing Custom Components
 
 ```python
-from backend.services.oracle_service import DataSource
+from backend.ai.oracle_designer import DataSourceSpec
 
-class CustomDataSource(DataSource):
-    async def fetch_data(self) -> Dict[str, Any]:
-        # Implement your data fetching logic
-        return {
-            'type': 'numeric',
-            'value': 42.0,
-            'timestamp': datetime.utcnow().isoformat()
-        }
+class CustomDataSourceSpec(DataSourceSpec):
+    def validate(self) -> bool:
+        # Implement your validation logic
+        return True
     
-    def get_reputation_score(self) -> float:
-        return 0.95  # Implement your reputation scoring logic
+    def get_confidence_score(self) -> float:
+        return 0.95  # Implement your confidence scoring logic
 ```
-
-## Monitoring
-
-The service exposes Prometheus metrics on port 9090 (configurable) including:
-
-- Update durations
-- Source error counts
-- Active source counts
-- Data confidence scores
-- Submission error counts
-
-## Security Considerations
-
-- All data is cryptographically signed before submission
-- Circuit breaker patterns prevent propagation of corrupted data
-- Reputation scoring helps identify and discount unreliable sources
-- Comprehensive validation prevents invalid data from entering the pipeline
 
 ## Development
 
