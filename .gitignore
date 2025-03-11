@@ -59,3 +59,26 @@ Thumbs.db
 .pyc
 .tar.gz
 .zip
+
+# Frontend specific
+src/frontend/node_modules/
+src/frontend/build/
+src/frontend/.env*
+src/frontend/.DS_Store
+src/frontend/coverage/
+src/frontend/npm-debug.log*
+src/frontend/yarn-debug.log*
+src/frontend/yarn-error.log*
+
+# Backend specific
+src/backend/.env*
+src/backend/__pycache__/
+src/backend/**/__pycache__/
+src/backend/*.pyc
+src/backend/**/*.pyc
+src/backend/dist/
+src/backend/build/
+src/backend/*.egg-info/
+src/backend/.pytest_cache/
+src/backend/.coverage
+src/backend/htmlcov/
