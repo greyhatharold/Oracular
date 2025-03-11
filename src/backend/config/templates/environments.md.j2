@@ -1,0 +1,100 @@
+# Oracular Deployment Environments
+
+This document describes the supported deployment environments and their specific configuration requirements.
+
+## Available Environments
+
+{% for env in environments %}
+### {{ env.value|title }}
+
+{% if env.value == "development" %}
+Development environment for local testing and development.
+
+**Features**:
+- Hot reload of configuration changes
+- Detailed logging and debugging
+- Mock data sources available
+- Test networks only
+
+**Example Configuration**: [development.yaml](examples/development.yaml)
+
+{% elif env.value == "staging" %}
+Staging environment for testing with production-like settings.
+
+**Features**:
+- Production configuration with test data
+- Test networks and limited mainnet access
+- Monitoring and alerts enabled
+- Rate limiting enforced
+
+**Example Configuration**: [staging.yaml](examples/staging.yaml)
+
+{% elif env.value == "production" %}
+Production environment for live oracle operation.
+
+**Features**:
+- Full mainnet support
+- High availability configuration
+- Enhanced security settings
+- Performance optimization
+- Comprehensive monitoring
+
+**Example Configuration**: [production.yaml](examples/production.yaml)
+
+{% elif env.value == "local" %}
+Local environment for development and testing.
+
+**Features**:
+- Local blockchain networks
+- Simplified configuration
+- Fast iteration
+- Development tools enabled
+
+**Example Configuration**: [local.yaml](examples/local.yaml)
+{% endif %}
+
+{% endfor %}
+
+## Environment Detection
+
+The environment is detected in the following order:
+
+1. Command line argument: `--env [environment]`
+2. Environment variable: `ORACULAR_ENV`
+3. Configuration file: `environment` field in config file
+4. Default: `development`
+
+## Environment-Specific Settings
+
+Some configuration values have different defaults or requirements depending on the environment:
+
+| Setting | Development | Staging | Production |
+|---------|------------|----------|------------|
+| `network.required_confirmations` | 1 | 3 | 12 |
+| `oracle.update_interval` | 60 | 300 | 300 |
+| `monitoring.log_level` | DEBUG | INFO | INFO |
+| `security.session_timeout` | 86400 | 3600 | 1800 |
+
+## Switching Environments
+
+To switch between environments:
+
+1. Set the environment:
+   ```bash
+   export ORACULAR_ENV=staging
+   ```
+
+2. Copy the appropriate example configuration:
+   ```bash
+   cp config/examples/staging.yaml config/instance.yaml
+   ```
+
+3. Update environment-specific values:
+   ```bash
+   vim config/instance.yaml
+   ```
+
+4. Start the service:
+   ```bash
+   python -m oracular.main
+   ``` 

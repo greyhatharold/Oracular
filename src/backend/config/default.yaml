@@ -1,0 +1,58 @@
+# Default configuration for Oracular oracle service
+# Override these values in environment-specific configuration files
+
+environment: development
+
+network:
+  rpc_url: "http://localhost:8545"  # Local Ethereum node
+  chain_id: 1337  # Local network
+  block_time: 15
+  required_confirmations: 1
+  max_gas_price: 50000000000  # 50 gwei
+  priority_fee: 1500000000    # 1.5 gwei
+
+oracle:
+  update_interval: 60  # 1 minute
+  min_data_points: 3
+  outlier_threshold: 2.0
+  retry_attempts: 3
+  retry_delay: 5
+
+monitoring:
+  metrics_port: 9090
+  log_level: "DEBUG"
+  alert_thresholds:
+    source_failure_rate: 0.1
+    update_delay: 300
+    gas_price: 100000000000
+
+security:
+  jwt_secret: "CHANGE_ME_IN_PRODUCTION"  # Must be overridden
+  api_key_expiry: 2592000  # 30 days
+  session_timeout: 3600    # 1 hour
+  max_failed_attempts: 5
+
+# Example data source configuration
+data_sources:
+  coinbase:
+    type: "rest"
+    endpoint: "https://api.pro.coinbase.com"
+    update_interval: 60
+    timeout: 30
+    validation_rules:
+      type: "numeric"
+      min: 0
+      max: 1000000
+    normalization_rules:
+      type: "numeric"
+      scale: 1.0
+      decimals: 8
+
+# Example contract configuration
+contracts:
+  price_oracle:
+    type: "basic_oracle"
+    update_interval: 300
+    min_responses: 3
+    deviation_threshold: 100  # 1%
+    heartbeat_period: 3600   # 1 hour 

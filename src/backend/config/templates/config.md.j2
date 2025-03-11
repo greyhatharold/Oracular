@@ -1,0 +1,60 @@
+# Oracular Configuration Reference
+
+This document describes all available configuration options for the Oracular oracle service.
+
+## Overview
+
+{{ schema.description }}
+
+## Configuration Schema
+
+{% for name, field in schema.fields.items() %}
+### {{ name }}
+
+{{ field.description }}
+
+{% if field.fields %}
+#### Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+{% for subname, subfield in field.fields.items() %}
+| `{{ subname }}` | `{{ subfield.type }}` | {{ "Yes" if subfield.required else "No" }} | {{ subfield.default if subfield.default != None else "-" }} | {{ subfield.description }} |
+{% endfor %}
+{% else %}
+**Type**: `{{ field.type }}`  
+**Required**: {{ "Yes" if field.required else "No" }}  
+**Default**: {{ field.default if field.default != None else "-" }}
+{% endif %}
+
+{% endfor %}
+
+## Environment Variables
+
+Configuration values can be overridden using environment variables with the `ORACULAR_` prefix.
+For example:
+
+```bash
+export ORACULAR_NETWORK_RPC_URL="https://mainnet.infura.io/v3/your-project-id"
+export ORACULAR_ORACLE_UPDATE_INTERVAL=300
+```
+
+## Secrets Management
+
+Sensitive configuration values (e.g. private keys, API keys) should be provided through environment variables
+or encrypted configuration files. The following values are considered sensitive:
+
+- `security.jwt_secret`
+- `network.private_key`
+- All values under `data_sources.api_keys`
+
+## Dynamic Configuration
+
+Some configuration values can be updated at runtime without service restart:
+
+- `oracle.update_interval`
+- `oracle.min_data_points`
+- `monitoring.alert_thresholds`
+- `network.max_gas_price`
+
+Changes to these values will be applied immediately and logged in the audit trail. 

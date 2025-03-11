@@ -1,0 +1,10 @@
+---
+description: All tasks
+globs: *.py, *.jsx, *.tsx
+alwaysApply: false
+---
+
+Ensure all edits are only made after comprehensive review of the impact of these changes to other files and dependencies.
+
+- You can @ files here
+- You can use markdown but dont have to
